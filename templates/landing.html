@@ -1,0 +1,233 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Authentication</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+    <script src="{% static 'home.js' %}"></script>
+
+    <style>
+        body {
+            background-color: #47A6AA;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 2 1'%3E%3Cdefs%3E%3ClinearGradient id='a' gradientUnits='userSpaceOnUse' x1='0' x2='0' y1='0' y2='1' gradientTransform='rotate(0,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%2347A6AA'/%3E%3Cstop offset='1' stop-color='%23301BFF'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='0' y1='0' x2='0' y2='1' gradientTransform='rotate(316,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23DF4FFF' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23DF4FFF' stop-opacity='1'/%3E%3C/linearGradient%3E%3ClinearGradient id='c' gradientUnits='userSpaceOnUse' x1='0' y1='0' x2='2' y2='2' gradientTransform='rotate(360,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23DF4FFF' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23DF4FFF' stop-opacity='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='0' y='0' fill='url(%23a)' width='2' height='1'/%3E%3Cg fill-opacity='0.5'%3E%3Cpolygon fill='url(%23b)' points='0 1 0 0 2 0'/%3E%3Cpolygon fill='url(%23c)' points='2 1 2 0 0 0'/%3E%3C/g%3E%3C/svg%3E");
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .img_left {
+            background-image: url(https://img.freepik.com/free-vector/flat-hand-drawn-hospital-reception-scene_52683-54613.jpg?w=2000);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            animation: myAnim1 2s cubic-bezier(0.7, 0, 0.84, 0) 0s 1 normal forwards;
+        }
+        
+        .content {
+            padding-left: 20px;
+            padding-right: 20px;
+            min-height: 100%;
+        }
+        
+        .card {
+            border: 0;
+            border-radius: 15px;
+            background-color: aliceblue;
+        }
+        
+        .nav.nav-tabs.nav-justified {
+            padding: 25px;
+            animation: myAnim 2s cubic-bezier(0.7, 0, 0.84, 0) 0s 1 normal forwards;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: rgb(0, 0, 145);
+            color: white;
+            border: 2px solid rgb(0, 0, 145);
+        }
+        
+        .nav-tabs .nav-link {
+            background-color: white;
+            color: rgb(0, 0, 145);
+            border: 2px solid rgb(0, 0, 145);
+            border-radius: 150px;
+        }
+        
+        .nav-item {
+            margin: 3px;
+        }
+        
+        .nav-link:hover {
+            background-color: rgb(45, 131, 211);
+            color: white;
+            border: 2px solid rgb(45, 131, 211);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border-bottom: 3.5px solid blueviolet;
+        }
+        
+        .form-select {
+            border-radius: 10px;
+            border-bottom: 3.5px solid blueviolet;
+        }
+        
+        .tab-content {
+            animation: myAnim 2s cubic-bezier(0.7, 0, 0.84, 0) 0s 1 normal forwards;
+        }
+        
+        .introHead {
+            text-align: center;
+            font-size: x-large;
+            font-style: oblique;
+            padding: 5px;
+            font-family: 'Gill Sans', sans-serif;
+            color: #f5faf7;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- {% if request.user.is_authenticated == False%} -->
+    <div class="container-fluid">
+        <div class="container">
+            <div class="card" style="margin-top: 10vh; margin-bottom: 10vh;">
+                <div class="row">
+                    <div class="col content">
+                        {% if messages %} {% for message in messages %}
+                        <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                            <div class="alert alert-success" role="alert">
+                                {{message}}
+                            </div>
+                        </div>
+                        {% endfor %} {%endif%}
+                        <ul class="nav nav-tabs nav-justified">
+                            <li class="nav-item"><a href="#login" class="nav-link active" data-bs-toggle="tab">Login</a>
+                            </li>
+                            <li class="nav-item"><a href="#signup" class="nav-link" data-bs-toggle="tab">Sign Up</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content pb-4">
+                            <div class="tab-pane active" id="login">
+                                <form class="row mt-5 g-2 px-4" action="/login" method="POST" autocomplete="off">
+                                    {% csrf_token %}
+                                    <div class="form-floating mb-3">
+                                        <input type="text" class="form-control" id="floatingInput" name="username" placeholder="username" required>
+                                        <label for="floatingInput">Username</label>
+                                    </div>
+                                    <div class="form-floating mb-5">
+                                        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required>
+                                        <label for="floatingPassword">Password</label>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-primary w-25 mb-3" value="Login">Login</button><br>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane" id="signup">
+                                <form class="row mt-4 g-2 px-4" action="/register" method="POST" autocomplete="off" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="row d-flex justify-content-center align-content-center">
+                                        <img src="http://assets.stickpng.com/images/585e4bf3cb11b227491c339a.png" style="height:160px; width:190px">
+                                        <input class="text-center mb-3" type="file" name="profile_pic">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-floating mb-2">
+                                                <input type="text" class="form-control" id="floatingInput-fullname" name="first_name" placeholder="First Name" required>
+                                                <label for="floatingInput-fullname">First Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-floating mb-2">
+                                                <input type="text" class="form-control" id="floatingInput-fullname" name="last_name" placeholder="Last Name" required>
+                                                <label for="floatingInput-fullname">Last Name</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-floating mb-2">
+                                                <input type="email" class="form-control" id="floatingInput-email" name="email" placeholder="name@example.com" required>
+                                                <label for="floatingInput-email">Email address</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-floating mb-2">
+                                                <input type="text" class="form-control" id="floatingInput-username" name="username" placeholder="Username" required>
+                                                <label for="floatingInput-username">Username</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-floating">
+                                                <textarea class="form-control mb-2" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 125px" name="address" required></textarea>
+                                                <label for="floatingTextarea2">Address</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="form-floating mb-2">
+                                                <input type="password" class="form-control" id="floatingPassword-password" name="password1" placeholder="Password" required>
+                                                <label for="floatingPassword-password">Create Password</label>
+                                            </div>
+                                            <div class="form-floating mb-2">
+                                                <input type="password" class="form-control" id="floatingPassword-password" name="password2" placeholder="Password" required>
+                                                <label for="floatingPassword-password">Confirm Password</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-floating mb-5" style="font-size: large;">
+                                                <select class="form-select" aria-label="Default select example" name="role">
+                                                    <option selected>Open this select menu</option>
+                                                    <option value="DOCTOR">DOCTOR</option>
+                                                    <option value="PATIENT">PATIENT</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mb-4">
+                                        <button class="btn btn-primary w-75" type="submit">Sign Up</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endif%}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script>
+            AOS.init();
+        </script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</body>
+
+</html>
